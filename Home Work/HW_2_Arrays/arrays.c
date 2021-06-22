@@ -55,7 +55,6 @@ void task2() {
     
     for (int i = N - 1; i > -1; i--)
           printf("%d ",array[i]); 
-    
 }   
 
 void task3() {
