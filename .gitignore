@@ -53,3 +53,4 @@ dkms.conf
 
 # Jupyter CP
 *.ipynb_checkpoints/
+*.ipynb
