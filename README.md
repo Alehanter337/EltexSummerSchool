@@ -4,7 +4,7 @@
 
  - [Google Drive][google-drive-materials]
  - [CS 241][cs-241]
- - [YouTube].[youtube]
+ - [YouTube][youtube]
 
 
 [google-drive-materials]:https://drive.google.com/drive/folders/1_x4A8rfv57Rhmgv6dZ0gEnb_hCZ_19WH
