@@ -176,13 +176,6 @@ a <<= 4;      // 64
 a >>= 2;      // 16
 ```
 
-
-
-
-    16
-
-
-
 ## Преобразования типов
 
 - Если один из операндов имеет тип **long double**, то второй операнд тоже будет преобразован в тип **long double**
@@ -215,8 +208,6 @@ printf("e = %f \n", e);
     d = 2.000000 
     e = 2.500000 
 
-
-
 ```c++
 int number = 70;
 char symbol = (char) number;
@@ -226,14 +217,6 @@ printf("symbol (int code) = %d \n", symbol);    // 70
 
     symbol = F 
     symbol (int code) = 70 
-
-
-
-
-
-    24
-
-
 
 ## Ветвление
 ### Оператор if
@@ -304,13 +287,6 @@ int x=3;
 ```
 
     z = 5
-
-
-
-
-    5
-
-
 
 ## Циклы
 
@@ -558,14 +534,6 @@ print_int(number);  // number=203
     number=203 
 
 
-
-
-
-    12
-
-
-
-
 ```c++
 #define print(a,b,c) printf("%d", a##b##c);
 print(2, 81, 34);
@@ -607,13 +575,6 @@ printf("%d \n", x);
     N=22
 
 
-
-
-    4
-
-
-
-
 ```c++
 #define BETA
 #define DEBUG
@@ -627,12 +588,6 @@ printf("%d \n", x);
 ```
 
     debug mode; beta version
-
-
-
-
-    24
-
 
 
 # Функции
@@ -712,8 +667,6 @@ printf("factorial of %d is equal %d \n", arg, f);
 ## Рекурсивные функции
 
 
-
-
 ```c++
 int factorial(int n)
 {
@@ -754,29 +707,4 @@ int fibonachi(int n)
 
 int result = fibonachi(10);
 printf("%d \n", result);
-```
-
-
-```c++
-
-```
-
-
-```c++
-
-```
-
-
-```c++
-
-```
-
-
-```c++
-
-```
-
-
-```c++
-
 ```
