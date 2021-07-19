@@ -96,7 +96,6 @@ void buyers_init(pthread_t *buyers)
         buyers_data[i].need = rand() % (BUYER_NEED_MAX - BUYER_NEED_MIN + 1) + BUYER_NEED_MIN;
     }
     
-    
     for (int i = 0; i < NUM_OF_BUYERS; i++)
     {
         void *curr_buyer = &buyers_data[i];
@@ -110,7 +109,8 @@ void buyers_init(pthread_t *buyers)
 
 void loader_init(pthread_t loader)
 {
-	if (pthread_create(&loader, NULL, loader_behavior, NULL) != 0) {
+	if (pthread_create(&loader, NULL, loader_behavior, NULL) != 0)
+    {
 		perror("ERROR: loader create faild");
 		exit(EXIT_FAILURE);
 	}
@@ -121,7 +121,7 @@ void all_threads_join(pthread_t *buyers, pthread_t loader)
     for (int i = 0; i < NUM_OF_BUYERS; i++) 
     {
 		pthread_join(buyers[i], NULL);
-	}
+    }
 	pthread_join(loader, NULL);
 }
 
@@ -130,7 +130,7 @@ void all_mutex_destroy()
     for (int i = 0; i < NUM_OF_STORES; i++) 
     {
 	    pthread_mutex_destroy(&mutexes[i]);
-	}
+    }
 }
 
 int main(void)
