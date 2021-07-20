@@ -33,7 +33,7 @@ void *buyer_behavior(void *arg)
     while (buyer_data->need > 0) 
     {
         sleep(3);
-        int curr_store = rand() % NUM_OF_STORES; //выбирается случайный мазагин
+        int curr_store = rand() % NUM_OF_STORES;
         pthread_mutex_lock(&mutexes[curr_store]);
             printf("BUYER %d | in store %d | buy %4d goods | need now = %4d\n",
 				buyer_data->id, 
