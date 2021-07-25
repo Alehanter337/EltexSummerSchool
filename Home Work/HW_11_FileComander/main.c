@@ -120,7 +120,7 @@ int main(void)
     
     //Цвета
     start_color();
-    init_pair(1, COLOR_BLACK, COLOR_YELLOW);
+    init_pair(1, COLOR_BLACK, COLOR_BLUE);
     init_pair(2, COLOR_WHITE, COLOR_BLACK);
 
     //Рамки
@@ -189,8 +189,15 @@ int main(void)
         );
  
     }
+    
+    int curr_window = 1;
+    char key = 0;
 
+    while((key = wgetch(left_win)) != 'q')
+    {
 
+    }
+    
     napms(3000);
     
     finish();
