@@ -21,6 +21,8 @@ int main(void)
     char *args_2;
     int args_flag = false;
     char *pipe_flag = NULL;
+    short shift = 0;
+    int i = 0;
     struct passwd *userinfo;
     uid_t userid;
     userinfo = getpwuid(userid);
@@ -69,9 +71,16 @@ int main(void)
         }
         else if((pipe_flag = strtok(NULL, "|")) != NULL)
         {
-            printf("more pipes\n");
+            args_flag = true;
+            while(pipe_flag[shift] == ' ')
+            {
+                shift++;
+            }
+            args_2 = (char*)malloc(strlen(pipe_flag)); 
+            args_2 = pipe_flag + shift;
         }
-
+        printf("%s\n", args_1);
+        printf("%s\n", args_2);
         
     }
 
