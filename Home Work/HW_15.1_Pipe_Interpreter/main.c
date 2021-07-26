@@ -61,19 +61,17 @@ int main(void)
         
         
         args_1 = (char*)malloc(strlen(comm));
-        args_1 = strtok(comm, "|");
-        pipe_flag = strtok(NULL, "|");
-        printf("%s\n",pipe_flag);
-        /*
+             
         if((args_1 = strtok(comm, "|")) == NULL)
         {
             fprintf(stderr, "error: string cannot be split");
             exit(EXIT_FAILURE);
         }
-        else  
+        else if((pipe_flag = strtok(NULL, "|")) != NULL)
         {
-            pipe_flag = (strtok(NULL, "|")); 
-        }*/
+            printf("more pipes\n");
+        }
+
         
     }
 
