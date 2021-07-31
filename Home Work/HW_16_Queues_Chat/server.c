@@ -13,6 +13,8 @@
     do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
 
 #define SERVER_CHAT "/server_chat_q"
+#define SERVER_DATA "/serve_data_q"
+#define MAX_CLIENTS 10
 #define MQ_MSG 10
 #define MQ_BUFF_SIZE 100
 #define SUCCESS 0
@@ -27,7 +29,7 @@ typedef struct
     pid_t pid[5];
     unsigned short client_count;
     mqd_t data_d;
-    mqd_t client_d;
+    mqd_t client_d[MAX_CLIENTS];
     mqd_t chat_d;
 } shed;
 
@@ -39,12 +41,16 @@ int main(void)
     pthread_t data_tid;
     pthread_t input_msg_tid;
     pthread_t chat_tid;
-    int status_data = 0;
-    int status_input_msg = 0;
-    int status_chat = 0;
+    int status_data;
+    int status_input_msg;
+    int status_chat;
     void *res_data;
     void *res_input;
     void *res_chat;
+    int status_chat_q;
+    int status_data_q;
+    int status_client_q;
+    char curr_client_queue_buff[15];
 
     queue_attr.mq_flags = 0;
     queue_attr.mq_maxmsg = MQ_MSG;
@@ -67,7 +73,7 @@ int main(void)
         printf("|SERVER| - Chat queue created\n");
     }
     
-    args.data_d = mq_open(SERVER_CHAT, O_RDONLY | O_CREAT, 0777, &queue_attr);
+    args.data_d = mq_open(SERVER_DATA, O_RDONLY | O_CREAT, 0777, &queue_attr);
 
     if(args.chat_d == ERROR) 
     {
@@ -134,12 +140,80 @@ int main(void)
     
     if (res_input == PTHREAD_CANCELED && res_data == PTHREAD_CANCELED && res_chat == PTHREAD_CANCELED)
     {
-        printf("main(): all threads was canceled\n");
+        printf("|SERVER| - All threads was canceled\n");
     }
     else
     {
-        printf("main(): thread or threads wasn't canceled (shouldn't happen!)\n");
+        printf("|SERVER| - Thread or threads wasn't canceled (shouldn't happen!)\n");
     }
+
+    status_chat_q = mq_close(args.chat_d);
+    if(status_chat_q == ERROR)
+    {
+        handle_error_en(status_chat_q, "mq_close chat");
+    }
+    else
+    {
+        printf("|SERVER| - Chat queue close\n");
+    }
+    
+    status_chat_q = mq_unlink(SERVER_CHAT);
+    if(status_chat_q == ERROR)
+    {
+        handle_error_en(status_chat_q, "mq_unlink chat");
+    }
+    else 
+    {
+        printf("|SERVER| - Chat queue unlink\n");
+    }
+
+    status_data_q = mq_close(args.data_d);
+    if(status_data_q == ERROR)
+    {
+        handle_error_en(status_data_q, "mq_close data");
+    }
+    else
+    {
+        printf("|SERVER| - Data queue close\n");
+    }
+    
+    status_data_q = mq_unlink(SERVER_DATA);
+    if(status_data_q == ERROR)
+    {
+        handle_error_en(status_data_q, "mq_unlink data");
+    }
+    else 
+    {
+        printf("|SERVER| - Data queue unlink\n");
+    }
+
+    for(int i = 0; i < args.client_count; i++)
+    {
+        
+        status_client_q =  mq_close(args.client_d[i]);
+        if(status_client_q == ERROR)
+        {
+            handle_error_en(status_client_q, "mq_close client");
+        }
+        else
+        {
+            sprintf(curr_client_queue_buff,"/client_%d", args.pid[i]);
+            printf("|SERVER| - Client[%d] queue close", args.pid[i]);
+        }
+        
+        status_client_q = mq_unlink(curr_client_queue_buff);
+        if(status_client_q == ERROR)
+        {
+            handle_error_en(status_client_q, "mq_unlink client");
+        }
+        else 
+        {
+            printf("|SERVER| - Client[%d]  unlink\n", args.pid[i]);
+        }
+    }
+    
+    printf("|SERVER| - Finish\n");
+    exit(EXIT_SUCCESS);
 }
 
 void* listen_data(void *args)
