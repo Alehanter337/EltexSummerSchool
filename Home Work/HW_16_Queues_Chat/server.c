@@ -45,12 +45,6 @@ int main(void)
     void *res_data;
     void *res_input;
     void *res_chat;
-    
-    /*
-    pthread_attr_t threadAttr;
-    pthread_attr_init(&threadAttr);
-    pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
-    */
 
     queue_attr.mq_flags = 0;
     queue_attr.mq_maxmsg = MQ_MSG;
