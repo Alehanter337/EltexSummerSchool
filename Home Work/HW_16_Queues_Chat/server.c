@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <unistd.h>
 
 #define handle_error_en(en, msg) \
     do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -44,6 +45,12 @@ int main(void)
     void *res_data;
     void *res_input;
     void *res_chat;
+    
+    /*
+    pthread_attr_t threadAttr;
+    pthread_attr_init(&threadAttr);
+    pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
+    */
 
     queue_attr.mq_flags = 0;
     queue_attr.mq_maxmsg = MQ_MSG;
@@ -54,7 +61,7 @@ int main(void)
 
     printf("|SERVER| - Start\n");
     
-    //Очередь чаата
+    
     args.chat_d = mq_open(SERVER_CHAT, O_RDONLY | O_CREAT, 0777, &queue_attr);
     
     if(args.chat_d == ERROR) 
@@ -66,7 +73,6 @@ int main(void)
         printf("|SERVER| - Chat queue created\n");
     }
     
-    //Очередь для данных
     args.data_d = mq_open(SERVER_CHAT, O_RDONLY | O_CREAT, 0777, &queue_attr);
 
     if(args.chat_d == ERROR) 
@@ -78,19 +84,19 @@ int main(void)
         printf("|SERVER| - Data queue created\n");
     }
     
-    status_data = pthread_create(&listen_data, NULL, listen_data, (void *) &args);
+    status_data = pthread_create(&data_tid, NULL, listen_data, (void *) &args);
     if(status_data != SUCCESS)
     {
         handle_error_en(status_data, "create data_ptrhead");
     }
     
-    status_chat = pthread_create(&listen_chat, NULL, listen_chat, (void *) &args);
+    status_chat = pthread_create(&chat_tid, NULL, listen_chat, (void *) &args);
     if(status_chat != SUCCESS)
     {
         handle_error_en(status_chat, "create chat_ptrhead");
     }
     
-    status_input_msg = pthread_create(&listen_input_msg, NULL, listen_input_msg, NULL);
+    status_input_msg = pthread_create(&input_msg_tid, NULL, listen_input_msg, NULL);
     if(status_input_msg != SUCCESS)
     {
         handle_error_en(status_input_msg, "create input_ptrhead");
@@ -125,12 +131,13 @@ int main(void)
     {
         handle_error_en(status_data, "join data_ptrhead");
     }
+    
     status_chat = pthread_join(chat_tid, &res_data);
     if(status_chat != SUCCESS)
     {
         handle_error_en(status_chat, "join chat_ptrhead");
     }
-
+    
     if (res_input == PTHREAD_CANCELED && res_data == PTHREAD_CANCELED && res_chat == PTHREAD_CANCELED)
     {
         printf("main(): all threads was canceled\n");
@@ -143,15 +150,18 @@ int main(void)
 
 void* listen_data(void *args)
 {
+    sleep(3);
     return SUCCESS;
 }
 
 void* listen_chat(void *args)
 {
+    sleep(3);
     return SUCCESS;
 }
 
 void* listen_input_msg()
 {
+    sleep(3);
     return SUCCESS;
 }
