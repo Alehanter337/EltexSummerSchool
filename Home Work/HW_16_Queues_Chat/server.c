@@ -9,6 +9,23 @@
 #include <errno.h>
 #include <unistd.h>
 
+// Поче мы ты не работаешь...............
+/*
+       ,___          .-;'
+       `"-.`\_...._/`.`
+    ,      \        /
+ .-' ',    / ()   ()\
+`'._   \  /()    .  (|
+    > .' ;,     -'-  /
+   / <   |;,     __.;
+   '-.'-.|  , \    , \
+      `>.|;, \_)    \_)
+       `-;     ,    /
+          \    /   <
+           '. <`'-,_)
+            '._)
+ 
+*/
 #define handle_error_en(en, msg) \
     do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
 
@@ -26,8 +43,8 @@ void* listen_input_msg();
 
 typedef struct
 {
-    pid_t pid[5];
-    unsigned short client_count;
+    pid_t pid[MAX_CLIENTS];
+    unsigned int client_count;
     mqd_t data_d;
     mqd_t client_d[MAX_CLIENTS];
     mqd_t chat_d;
@@ -65,12 +82,10 @@ int main(void)
 
     printf("|SERVER| - Start\n");
 
-
     args.chat_d = mq_open(SERVER_CHAT, O_RDONLY | O_CREAT, 0777, &queue_attr);
-
     if(args.chat_d == ERROR)
     {
-        handle_error_en(args.chat_d, "mq_open");
+        handle_error_en(args.chat_d, "mq_open_chat");
     }
     else
     {
@@ -78,10 +93,9 @@ int main(void)
     }
 
     args.data_d = mq_open(SERVER_DATA, O_RDONLY | O_CREAT, 0777, &queue_attr);
-
-    if(args.chat_d == ERROR)
+    if(args.data_d == ERROR)
     {
-        handle_error_en(args.chat_d, "mq_open_data");
+        handle_error_en(args.data_d, "mq_open_data");
     }
     else
     {
@@ -93,11 +107,19 @@ int main(void)
     {
         handle_error_en(status_data, "create data_ptrhead");
     }
+    else
+    {
+        printf("|SERVER| - Data thread created\n");
+    }
 
     status_chat = pthread_create(&chat_tid, &pthread_attr, listen_chat, (void *) &args);
     if(status_chat != SUCCESS)
     {
         handle_error_en(status_chat, "create chat_ptrhead");
+    }
+    else
+    {
+        printf("|SERVER| - Chat thread created\n");
     }
 
     status_input_msg = pthread_create(&input_msg_tid, &pthread_attr, listen_input_msg, NULL);
@@ -105,7 +127,11 @@ int main(void)
     {
         handle_error_en(status_input_msg, "create input_ptrhead");
     }
-    
+    else
+    {
+        printf("|SERVER| - Input thread created\n");
+    }
+
     status_input_msg = pthread_join(input_msg_tid, &res_input);
     if(status_input_msg != SUCCESS)
     {
@@ -228,12 +254,6 @@ void* listen_data(void *args_ptr)
                 args->client_count++;
             }
         }
-        /*else
-        {
-            printf("|SERVER-DATA| - Whait clients\n");
-            sleep(2);
-            continue;
-        }*/
     }
     return SUCCESS;
 }
@@ -257,12 +277,6 @@ void* listen_chat(void *args_ptr)
             printf("|SERVER-CHAT| -  Msg from Client[%s] add to queues\n", strtok(input_box, ":"));
             memset(input_box, 0, sizeof(input_box));
         }
-        /*else
-        {
-            printf("|SERVER-CHAT| - Whait new msg from clients\n");
-            sleep(1);
-            continue;
-        }*/
     }
     return SUCCESS;
 }
@@ -283,3 +297,4 @@ void* listen_input_msg()
 
     return SUCCESS;
 }
+
