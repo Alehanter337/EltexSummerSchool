@@ -1,8 +1,4 @@
 #include "headers.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/un.h>
-#include <unistd.h>
 
 int main(void)
 {

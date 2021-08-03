@@ -4,7 +4,7 @@ SERVER_SOURCES := server.c
 CLIENT_SOURCES := client.c
 
 server: $(SERVER_SOURCES)
-		@gcc $(SERVER_SOURCES) -o $(SERVER)
+		@gcc $(SERVER_SOURCES) -o $(SERVER) -g
 
 client: $(CLIENT_SOURCES)
 		@gcc $(CLIENT_SOURCES) -o $(CLIENT)
