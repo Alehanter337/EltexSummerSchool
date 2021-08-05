@@ -91,7 +91,10 @@ int main(void)
 
     for(int i = 0; ; i++)
     {
-
+        if(i == NUM_OF_THREADS)
+        {
+            i = 0;
+        }
     }
 
 
