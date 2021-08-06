@@ -95,9 +95,105 @@ int main(void)
         {
             i = 0;
         }
+
+        if(threads_available[i] != AVAILABLE)
+        {
+            continue;
+        }
+        
+        fd_data[i] = accept(fd_socket, NULL, NULL);
+        if(fd_data[i] == ERROR)
+        {
+            handle_error("accept()");
+        }
+        else
+        {
+            printf("|SERVER| - Accept complete\n");
+        }
+
+        char buff[8] = {0};
+        sprintf(buff, "%d", fd_data[i]);
+        if (mq_send(queues[i], buff, strlen(buff) + 1, 5) == -1)
+        {
+            handle_error("mq_send()");
+        }
+        else
+        {
+            printf("|SERVER| - MSG send\n");
+        }
+
+        threads_available[i] = 0;
+
+        printf("|SERVER| - Send data [%d];\n|SERVER| - Thread [%d]\n", fd_data[i], i);
     }
 
 
     close(fd_socket);
     exit(EXIT_SUCCESS);
+}
+
+void *thread_func(void *param)
+{
+    struct param_for_threads *threads_params = (struct param_for_threads *)param;
+    
+    mqd_t fd_queue = mq_open(threads_params->queue_name, O_RDONLY);
+    if(fd_queue == 1)
+    {
+        handle_error("mq_open()");
+    }
+    else
+    {
+        printf("|SERVER - Thread| - Queue open\n");
+    }
+
+    while(1)
+    {
+        char buff_2[MAX_MSG_SIZE] = {0};
+        if (mq_receive(fd_queue, buff_2, BUFFER_SIZE, NULL) == ERROR)
+        {
+            handle_error("mq_receive");
+        }
+        else
+        {
+            printf("|SERVER - Thread| - Mq_receive\n");
+        }
+
+        int fd_data = atoi(buff_2);
+        printf("|SERVER - Thread| - FD_DATA - received =%d\n", fd_data);
+        
+        while(1)
+        {
+            char buff_3[MAX_MSG_SIZE] = {0};
+            int ret = recv(fd_data, buff_3, MAX_MSG_SIZE, 0);
+            if(ret == ERROR)
+            {
+                handle_error("recv()");
+            }
+            else
+            {
+                printf("|SERVER -THREAD| - Recv done[%s]\n", buff_3);
+            }
+
+            if (strncmp(buff_3, "/exit", MAX_MSG_SIZE) == 0) 
+            {
+                 close(fd_data);
+                 threads_available[threads_params->ID] = AVAILABLE;
+                 break;
+            }
+
+            strcat(buff_3, " from SERVER\n");
+
+            ret = send(fd_data, buff_3, MAX_MSG_SIZE, 0);
+            if(ret == ERROR)
+            {
+                handle_error("send()");
+            }
+            else
+            {
+                printf("|SERVER - THREAD| - Send done\n");
+            }
+
+            printf("|SERVER - THREAD| - MSG: %s\n", buff_3);
+        }
+    }
 }
