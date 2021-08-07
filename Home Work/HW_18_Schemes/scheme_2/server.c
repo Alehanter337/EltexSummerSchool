@@ -10,23 +10,29 @@ short int threads_available[NUM_OF_THREADS];
 
 int main(void)
 {
+
     struct sockaddr_in server;
     server.sin_family = AF_INET;
-    server.sin_addr.s_addr = htons(PORT);
+    int port = 7331;
+    server.sin_port = htons(port);
     server.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 
-    int fd_socket = socket(AF_INET, SOCK_STREAM, 0);
+    int val = 0;
+
+    int fd_socket = socket(AF_INET, SOCK_STREAM, val);
     if(fd_socket == ERROR)
     {
         handle_error("socket()");
     }
-    else 
+    else
     {
         printf("|SERVER| - Socket created\n");
     }
 
-    if(bind(fd_socket, (const struct sockaddr *) &server,
-            sizeof(struct sockaddr_in)) == ERROR)
+    int req = bind(fd_socket, (const struct sockaddr *) &server,
+                  sizeof(struct sockaddr_in));
+
+    if(req == ERROR)
     {
         handle_error("bind()");
     }
@@ -34,14 +40,14 @@ int main(void)
     {
         printf("|SERVER| - Bind complete\n");
     }
-    
-    if(listen(fd_socket, 5) == ERROR)
+
+    if(listen(fd_socket, 1) == ERROR)
     {
         handle_error("listen()");
     }
     else
     {
-        printf("|SERVER| - Listen complete\n");
+        printf("|SERVER| - Listen done\n");
     }
 
     pthread_attr_t thread_attr_default;
@@ -83,7 +89,7 @@ int main(void)
         }
         else
         {
-            printf("|SERVER| - Pthrad create\n");
+            printf("|SERVER| - Pthread create\n");
         }
         
         threads_available[i] = AVAILABLE;
