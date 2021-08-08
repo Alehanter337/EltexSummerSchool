@@ -1,5 +1,5 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef HEADERS_H
+#define HEADERS_H
 
 #include <stdio.h>
 #include <string.h>
@@ -17,7 +17,9 @@
 
 #define ERROR -1
 
-#define PORT 7331
+#define SERVER_PORT 7331
+
+#define CLIENT_PORT 7441
 
 #define PACKET_SIZE 199
 
