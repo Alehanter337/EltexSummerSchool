@@ -16,8 +16,7 @@ int main(void)
     
     socklen_t sockaddr_len = sizeof(struct sockaddr_in);
     
-    int ret = bind(fd_socket, (struct sockaddr *)&server, sockaddr_len);
-    if(ret < 0)
+    if(bind(fd_socket, (struct sockaddr *)&server, sockaddr_len) < 0)
     {
         handle_error("bind()");
     }
