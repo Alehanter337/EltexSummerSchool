@@ -1,7 +1,4 @@
 #include "headers.h"
-#include <netinet/in.h>
-#include <stdio.h>
-#include <sys/socket.h>
 
 void send_packet(struct sockaddr_in, int);
 
@@ -26,6 +23,7 @@ int main(void)
     close(fd_socket); 
     exit(EXIT_SUCCESS);
 }
+
 void send_packet(struct sockaddr_in server, int fd_socket)
 {
     socklen_t sockaddr_len = sizeof(struct sockaddr_in);

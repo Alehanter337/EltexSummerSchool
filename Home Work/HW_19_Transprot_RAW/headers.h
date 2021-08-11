@@ -21,6 +21,6 @@
 
 #define CLIENT_PORT 7441
 
-#define PACKET_SIZE 199
+#define PACKET_SIZE 64
 
 #endif

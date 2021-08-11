@@ -1,5 +1,5 @@
 #include "headers.h"
-#include <stdlib.h>
+
 int main(void)
 {
     struct sockaddr_in client;
