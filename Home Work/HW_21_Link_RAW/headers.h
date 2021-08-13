@@ -26,11 +26,11 @@
 
 #define PACKET_SIZE 256
 
-#define SERVER_IP "192.168.0.137"
+#define SERVER_IP "192.168.0.2"
 
 #define CLIENT_IP "192.168.0.3"
 
-#define INTERFACE "en0"
+#define INTERFACE "eth0"
 
 #define MAC_LEN 6
 
