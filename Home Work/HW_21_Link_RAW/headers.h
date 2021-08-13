@@ -13,6 +13,7 @@
 #include <netinet/if_ether.h>
 #include <arpa/inet.h>
 #include <net/if.h>
+#include <linux/if_packet.h>
 
 #define handle_error(msg) \
         do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -25,8 +26,12 @@
 
 #define PACKET_SIZE 256
 
-#define SERVER_IP "192.168.0.2"
+#define SERVER_IP "192.168.0.137"
 
 #define CLIENT_IP "192.168.0.3"
+
+#define INTERFACE "en0"
+
+#define MAC_LEN 6
 
 #endif
